@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.solution.mapper.DishMapper">
+
+    <select id="getDishes" resultType="com.example.solution.pojo.vo.DishFlavorVO">
+        select * from dish where category_id = #{categoryId}
+    </select>
+
+    <select id="selectFlavorsByDishIdList" resultType="com.example.solution.pojo.entity.DishFlavor">
+        select * from dish_flavor
+        where dish_id in
+        <foreach collection="dishIds" separator="," open="(" close=")" item="dishId">
+            #{dishId}
+        </foreach>
+    </select>
+
+    <select id="getDishesAndFlavors" resultType="com.example.solution.pojo.item.DishesAndFlavorsItem">
+        SELECT
+            d.id as id,
+            d.category_id as categoryId,
+            df.dish_id as f_dishId,
+            df.id as f_id,
+            df.`name` as f_name,
+            df.`value` as f_value
+        FROM
+            dish as d
+                LEFT JOIN
+            dish_flavor as df ON d.id = df.dish_id
+        WHERE
+            d.category_id = #{categoryId}
+    </select>
+
+</mapper>
